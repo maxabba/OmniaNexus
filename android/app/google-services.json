@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "91014642455",
+    "project_id": "nexus-l7sgyx",
+    "storage_bucket": "nexus-l7sgyx.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91014642455:android:243ffdb566aaf1f6209552",
+        "android_client_info": {
+          "package_name": "com.flutterflow.fluttermet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuh3JSQ-bMPh0sFiSLpiN7ZL9VqNWwULQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91014642455:android:73dee395fcb2f4df209552",
+        "android_client_info": {
+          "package_name": "com.mycompany.omnianexus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuh3JSQ-bMPh0sFiSLpiN7ZL9VqNWwULQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
