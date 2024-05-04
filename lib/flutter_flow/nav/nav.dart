@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import '/backend/backend.dart';
 
-import '/auth/base_auth_user_provider.dart';
+import '/backend/schema/structs/index.dart';
+
+import '/auth/custom_auth/custom_auth_user_provider.dart';
 
 import '/index.dart';
 import '/main.dart';
@@ -27,8 +28,8 @@ class AppStateNotifier extends ChangeNotifier {
   static AppStateNotifier? _instance;
   static AppStateNotifier get instance => _instance ??= AppStateNotifier._();
 
-  BaseAuthUser? initialUser;
-  BaseAuthUser? user;
+  OmniaNexusAuthUser? initialUser;
+  OmniaNexusAuthUser? user;
   bool showSplashImage = true;
   String? _redirectLocation;
 
@@ -53,7 +54,7 @@ class AppStateNotifier extends ChangeNotifier {
   /// to perform subsequent actions (such as navigation) afterwards.
   void updateNotifyOnAuthChange(bool notify) => notifyOnAuthChange = notify;
 
-  void update(BaseAuthUser newUser) {
+  void update(OmniaNexusAuthUser newUser) {
     final shouldUpdate =
         user?.uid == null || newUser.uid == null || user?.uid != newUser.uid;
     initialUser ??= newUser;
@@ -79,13 +80,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? HomePageWidget() : Auth1Widget(),
+          appStateNotifier.loggedIn ? HomePageWidget() : LoginWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) =>
-              appStateNotifier.loggedIn ? HomePageWidget() : Auth1Widget(),
+              appStateNotifier.loggedIn ? HomePageWidget() : LoginWidget(),
         ),
         FFRoute(
           name: 'HomePage',
@@ -93,19 +94,24 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => HomePageWidget(),
         ),
         FFRoute(
-          name: 'Nutrition_Section',
-          path: '/nutritionSection',
-          builder: (context, params) => NutritionSectionWidget(),
-        ),
-        FFRoute(
           name: 'Pain_Section',
           path: '/painSection',
           builder: (context, params) => PainSectionWidget(),
         ),
         FFRoute(
-          name: 'Auth1',
-          path: '/auth1',
-          builder: (context, params) => Auth1Widget(),
+          name: 'HomePageCopy',
+          path: '/homePageCopy',
+          builder: (context, params) => HomePageCopyWidget(),
+        ),
+        FFRoute(
+          name: 'NutriizioneClinica',
+          path: '/nutriizioneClinica',
+          builder: (context, params) => NutriizioneClinicaWidget(),
+        ),
+        FFRoute(
+          name: 'Login',
+          path: '/login',
+          builder: (context, params) => LoginWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -224,7 +230,7 @@ class FFParameters {
     String paramName,
     ParamType type, {
     bool isList = false,
-    List<String>? collectionNamePath,
+    StructBuilder<T>? structBuilder,
   }) {
     if (futureParamValues.containsKey(paramName)) {
       return futureParamValues[paramName];
@@ -242,7 +248,7 @@ class FFParameters {
       param,
       type,
       isList,
-      collectionNamePath: collectionNamePath,
+      structBuilder: structBuilder,
     );
   }
 }
@@ -276,7 +282,7 @@ class FFRoute {
 
           if (requireAuth && !appStateNotifier.loggedIn) {
             appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
-            return '/auth1';
+            return '/login';
           }
           return null;
         },
